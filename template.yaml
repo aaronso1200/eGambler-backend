@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  eGamblerApiGateWay:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: Api Gateway for eGambler
+      StageName: Staging
+    Cors: "'*'"
+#      AllowMethods: "'*'"
+#      AllowHeaders: "'*'"
+#      AllowOrigin: "'*'"
+#      MaxAge: "'600'"
+#      AllowCredentials: True""
+  eGamblerLambdaLayer:
+     Type: AWS::Serverless::LayerVersion
+     Properties:
+       LayerName: sam-app-dependencies
+       Description: Dependencies for sam app eGambler
+       ContentUri: dependencies/
+       CompatibleRuntimes:
+              - nodejs12.x
+       LicenseInfo: 'MIT'
+       RetentionPolicy: Retain
+  eGamblerLoginLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: eGamblerLogin1
+      CodeUri: eGamblerLogin/
+      Description: ''
+      Handler: index.handler
+      MemorySize: 128
+      Role: 'arn:aws:iam::549930952054:role/eGamblerLambda'
+      Runtime: nodejs12.x
+      Timeout: 3
+      Layers: 
+         - !Ref eGamblerLambdaLayer
+      Events:
+        HelloWorldApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref eGamblerApiGateWay
+            #Path: /user/login
+            #Method: POST
+            Path: "/user/log"
+            Method: POST
+#            cors: true
+        HellApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref eGamblerApiGateWay
+            #Path: /user/login
+            #Method: POST
+            Path: "/{proxy+}"
+            Method: ANY
+  eGamblerSignUpLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: eGamblerSignUp1
+      CodeUri: eGamblerSignUp/
+      Description: ''
+      Handler: index.handler
+      MemorySize: 128
+      Role: 'arn:aws:iam::549930952054:role/eGamblerLambda'
+      Runtime: nodejs12.x
+      Timeout: 3
+      Layers: 
+         - !Ref eGamblerLambdaLayer
+      Events:
+        HelloWorldApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref eGamblerApiGateWay
+            Path: /user
+            Method: POST

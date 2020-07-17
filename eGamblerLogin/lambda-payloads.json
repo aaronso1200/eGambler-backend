@@ -1,0 +1,7 @@
+{
+    "eGamblerLogin": {
+        "lambda": {
+            "body": "{\n  \"loginName\": \"On999\",\n  \"displayName\": \"ON99\",\n  \"password\": \"sdON99\",\n  \"email\": \"asdfkjkl@gmail.com\"\n}"
+        }
+    }
+}
